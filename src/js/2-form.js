@@ -41,5 +41,4 @@ const formData = {
     // Очищення форми та локального сховища
     form.reset();
     localStorage.removeItem('feedback-form-state');
-  });
-  
+  });  
