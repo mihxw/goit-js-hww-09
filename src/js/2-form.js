@@ -1,34 +1,45 @@
-const form = document.querySelector('.feedback-form');
-const STORAGE_KEY = 'feedback-form-state';
-
-let formData = {
+// Об'єкт для зберігання даних форми
+const formData = {
     email: '',
     message: '',
-};
-
-const savedData = localStorage.getItem(STORAGE_KEY);
-if (savedData) {
-    formData = JSON.parse(savedData);
-    form.elements.email.value = formData.email || '';
-    form.elements.message.value = formData.message || '';
-}
-
-form.addEventListener('input', (event) => {
-    const { name, value } = event.target;
-    formData[name] = value.trim();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
-});
-
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
+  };
+  
+  // Отримуємо елементи форми
+  const form = document.querySelector('.feedback-form');
+  const emailInput = form.querySelector('input[name="email"]');
+  const messageInput = form.querySelector('textarea[name="message"]');
+  
+  // Завантажуємо дані з локального сховища при завантаженні сторінки
+  const savedData = JSON.parse(localStorage.getItem('feedback-form-state'));
+  
+  if (savedData) {
+    formData.email = savedData.email;
+    formData.message = savedData.message;
+    emailInput.value = savedData.email;
+    messageInput.value = savedData.message;
+  }
+  
+  // Обробка вводу в форму
+  form.addEventListener('input', (e) => {
+    const { name, value } = e.target;
+    formData[name] = value;
+    localStorage.setItem('feedback-form-state', JSON.stringify(formData));
+  });
+  
+  // Обробка відправлення форми
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+  
+    // Перевірка, чи всі поля заповнені
     if (!formData.email || !formData.message) {
-        alert('Fill please all fields');
-        return;
+      alert('Fill please all fields');
+      return;
     }
-
-    console.log('Form data:', formData);
-
-    localStorage.removeItem(STORAGE_KEY);
+  
+    console.log(formData);
+  
+    // Очищення форми та локального сховища
     form.reset();
-    formData = { email: '', message: '' };
-});
+    localStorage.removeItem('feedback-form-state');
+  });
+  
